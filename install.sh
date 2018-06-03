@@ -13,7 +13,7 @@ timedatectl set-ntp true
 
 # Identify target device
 lsblk
-#=> /dev/sdX
+#=> /dev/sdX or /dev/nvmenX
 # Check existing partitions
 gdisk -l /dev/sdX
 # Enter partitions edition mode
@@ -61,13 +61,13 @@ lsblk
 cryptsetup luksFormat /dev/sdXY
 # YES
 # Passphrase: ******
-# Open container and call it luks-container:
-cryptsetup luksOpen /dev/sdXY luks-container
+# Open container and call it lukscontainer:
+cryptsetup luksOpen /dev/sdXY lukscontainer
 
 # Create LVM physical volume (PV)
-pvcreate /dev/mapper/luks-container
+pvcreate /dev/mapper/lukscontainer
 # Create LVM volume group
-vgcreate lvmg /dev/mapper/luks-container
+vgcreate lvmg /dev/mapper/lukscontainer
 # Create LVM logical volumes (swap and root).
 # Maybe, leave some space in the group for later extensions
 lvcreate -L 8G lvmg -n swap
@@ -87,26 +87,25 @@ btrfs subvolume create /mnt/_active/root
 btrfs subvolume create /mnt/_active/home
 umount /mnt
 mount -o subvol=_active/root,ssd /dev/mapper/lvmvg-root /mnt
-mkdir -p /mnt/{boot/efi,home}
+mkdir -p /mnt/{boot,home,esp}
 mount -o subvol=_active/home,ssd /dev/mapper/lvmvg-root /mnt/home
 
-mkdir /mnt/esp
-mount /dev/sda1 /mnt/esp
+mount /dev/sda[EFI] /mnt/esp
 mkdir -p /mnt/esp/EFI/arch
 mount -B /mnt/esp/EFI/arch /mnt/boot
 # Optional: edit /etc/pacman.d/mirrorlist file
 
 # Install packages
-pacstrap /mnt base base-devel efibootmgr refind-efi openssl btrfs-progs sbsigntools
+pacstrap /mnt base base-devel efibootmgr refind-efi openssl btrfs-progs sbsigntools intel-ucode terminus-font
 # for wifi: wpa_supplicant dialog
 
 # Generate fstab
 genfstab -UP /mnt > /mnt/etc/fstab
-cat /mnt/etc/fstab #Check
-# Add if needed
+nano /mnt/etc/fstab
+# Modify /mnt/esp/EFI/arch line to:
 # /esp/EFI/arch     /boot       none        defaults,bind 0 0
 
-# Enter new system using bash shell
+# Enter new system
 arch-chroot /mnt /bin/bash
 
 # Network config
@@ -126,6 +125,7 @@ nano /etc/locale.gen
 locale-gen
 echo LANG=en_GB.UTF-8 >> /etc/locale.conf
 echo KEYMAP=fr-latin1 >> /etc/vconsole.conf
+echo FONT=term-132n >> /etc/vconsole.conf
 
 passwd
 useradd -m -G wheel -s /bin/bash seb
@@ -135,7 +135,7 @@ nano /etc/sudoers
 
 # Edit mkinitcpio.conf HOOKS
 nano /etc/mkinitcpio.conf
-# HOOKS=(... keyboard keymap encrypt lvm2 btrfs filesystems ...)
+# HOOKS=(... keyboard consolefont keymap encrypt lvm2 btrfs filesystems ...)
 
 mkinitcpio -p linux
 
@@ -165,31 +165,79 @@ makepkg -si
 yay -S shim-signed
 exit
 
+# Temporarily monut ESP to /boot
+umount -R /boot
+mount /dev/sda1 /boot
+
 # install refind
 # sometimes its shimx64.efi
 refind-install --shim /usr/share/shim-signed/shim.efi --localkeys
 
-# move all /boot/EFI to /esp/EFI
-mv /boot/EFI/* /esp/EFI
-rm -r /boot/EFI
+sbsign --key /etc/refind.d/keys/refind_local.key --cert /etc/refind.d/keys/refind_local.crt --output /boot/EFI/arch/vmlinuz-linux /boot/EFI/arch/vmlinuz-linux
 
-sbsign --key /etc/refind.d/keys/refind_local.key --cert /etc/refind.d/keys/refind_local.crt --output /boot/vmlinuz-linux /boot/vmlinuz-linux
+# Write HOOK to sign kernel each time its upgraded/installed/removed
+nano /etc/pacman.d/hooks/99-secureboot.hook
+# [Trigger]
+# Operation = Install
+# Operation = Upgrade
+# Type = Package
+# Target = linux
+#
+# [Action]
+# Description = Signing Kernel for SecureBoot
+# When = PostTransaction
+# Exec = /usr/bin/sbsign --key /etc/refind.d/keys/refind_local.key --cert /etc/refind.d/keys/refind_local.crt --output /boot/vmlinuz-linux /boot/vmlinuz-linux
+# Depends = sbsigntools
 
-nano /esp/EFI/refind/refind.conf
+nano /boot/EFI/refind/refind.conf
 # Uncomment include manual.conf
-nano /esp/EFI/refind/manual.conf
+nano /boot/EFI/refind/manual.conf
 # menuentry "Arch Linux" {
 #   icon    /EFI/refind/icons/os_arch.png
 #   loader  /EFI/arch/vmlinuz-linux
-#   initrd  /EFI/arch/initramfs-linux.img
-#   options "cryptdevice=/dev/sda2:lukscontainer ro root=/dev/mapper/lvmg-root rootflags=subvol=_active/root,ssd initrd=/EFI/arch/initramfs-linux.img initrd=/EFI/arch/intel-ucode.img"
+#   options "cryptdevice=/dev/sda2:lukscontainer ro root=/dev/mapper/lvmg-root rootflags=subvol=_active/root,ssd initrd=/EFI/arch/intel-ucode.img initrd=/EFI/arch/initramfs-linux.img"
 #   submenuentry "Boot using fallback initramfs" {
-#       options "cryptdevice=/dev/sda2:lukscontainer ro root=/dev/mapper/lvmg-root initrd=/EFI/arch/initramfs-linux-fallback.img initrd=/EFI/arch/intel-ucode.img"
+#       options "cryptdevice=/dev/sda2:lukscontainer ro root=/dev/mapper/lvmg-root initrd=/EFI/arch/intel-ucode.img initrd=/EFI/arch/initramfs-linux-fallback.img"
 #   }
 #   submenuentry "Boot to terminal" {
 #       add_options "systemd.unit=multi-user.target"
 #   }
 # }
+
+# Install utilities
+pacman -S gvim gpg2 chromium tlp wget unzip
+
+# Install Xorg
+pacman -S xorg xterm xorg-xrandr
+localectl --no-convert set-x11-keymap fr
+
+# Install WM
+su seb
+yay -S awesome
+cp /etc/xdg/awesome/ ~/.config/awesome/
+echo "exec awesome" >> ~/.xinitrc
+exit
+
+# Install DM
+pacman -S lightdm lightdm-gtk-greeter
+systemctl enable lightdm.service
+
+# Install iGPU drivers
+pacman -S xf86-video-intel #xf86-video-fbdev under VM
+# Install dGPU drivers (native NVIDIA)
+curl -L -0 https://cfnvidiawebsitetogetlinux64runfile > /home/seb/Downloads/thefile.run
+sh /home/seb/Downloads/thefile.run # xserver needs to be exited
+# Install bumblebee
+pacman -S bumblebee mesa bbswitch
+g passwd -a seb bumblebee
+systemctl enable bumblebeed.service
+# Test it
+pacman -S mesa-demos
+optirun glxspheres64
+
+# Install smart card reader utilities
+pacman -S ccid opensc
+systemctl enable pcscd.enable
 
 # Done!
 exit
