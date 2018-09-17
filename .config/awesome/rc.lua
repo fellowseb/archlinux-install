@@ -6,6 +6,8 @@ require("awful.autofocus")
 local wibox = require("wibox")
 -- Theme handling library
 local beautiful = require("beautiful")
+local xresources = require("beautiful.xresources")
+local dpi = xresources.apply_dpi
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
@@ -13,6 +15,8 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+-- Custom widgets
+local battery_widget = require("battery-widget")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -90,6 +94,25 @@ local function client_menu_toggle_fn()
         end
     end
 end
+
+local function awesome_terminal_cp_to_char(cpstr, def)
+    return utf8.char(tonumber(os.getenv(cpstr), 16)) or def
+end
+
+local function confirm_prompt_fn(prompText, fn, defaultToNo)
+  return function ()
+    local promptYN = "Y/n"
+    if defaultToNo == true then
+      promptYN = "y/N"
+    end
+    return awful.prompt.run {
+      prompt       = prompText .. ": " .. promptYN .. ") ",
+      textbox      = awful.screen.focused().mypromptbox.widget,
+      exe_callback = function (a) if string.upper(a) == 'Y' or ( defaultToNo ~= true and a == "") then fn() end end
+    }
+  end
+end
+
 -- }}}
 
 -- {{{ Menu
@@ -102,12 +125,19 @@ myawesomemenu = {
    { "quit", function() awesome.quit() end}
 }
 
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "open terminal", terminal }
-                                  }
-                        })
+mymainmenu = awful.menu({
+  items = {
+    { "awesome", myawesomemenu, beautiful.awesome_icon },
+    { "terminal", terminal },
+    { "system", {
+        { "reboot", confirm_prompt_fn("Sure ?", function() awful.spawn("systemctl reboot") end) },
+        { "poweroff", confirm_prompt_fn("Sure ?", function() awful.spawn("systemctl poweroff") end) }
+      }
+    }
+  }
+})
 
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
+mylauncher = awful.widget.launcher({ image = beautiful.menu_icon,
                                      menu = mymainmenu })
 
 -- Menubar configuration
@@ -115,11 +145,11 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
+-- mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Wibar
 -- Create a textclock widget
-mytextclock = wibox.widget.textclock()
+mytextclock = wibox.widget.textclock(awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_CALENDAR", "").." %a %b %d "..awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_CLOCK_O", "").." %H:%M")
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -179,12 +209,83 @@ end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
+local function battery_icon(percent_str)
+    local percent = tonumber(percent_str)
+    local cp_str = "CODEPOINT_OF_AWESOME_BATTERY_FULL"
+    if percent < 25 then
+         cp_str = "CODEPOINT_OF_AWESOME_BATTERY_EMPTY"
+    elseif percent < 50 then
+	 cp_str = "CODEPOINT_OF_AWESOME_BATTERY_QUARTER"
+    elseif percent < 75 then
+         cp_str = "CODEPOINT_OF_AWESOME_BATTERY_HALF"
+    elseif percent < 100 then
+	 cp_str = "CODEPOINT_OF_AWESOME_BATTERY_THREE_QUARTERS"
+    end
+    return awesome_terminal_cp_to_char(cp_str, "")
+end
+
+local function battery_widget_text(ctx)
+    return battery_icon(tostring(ctx["percent"]))
+        .. " "
+        .. tostring(ctx["color_on"])
+        .. tostring(ctx["percent"])
+        .. "%"
+        .. tostring(ctx["color_off"])
+end
+
+local BAT0 = battery_widget {
+    ac = "AC",
+    adapter = "BAT0",
+    ac_prefix = "AC: ",
+    battery_prefix = "Bat: ",
+    limits = {
+        { 25, "#dc2566"   },
+        { 50, "orange"},
+        {100, "#8fc029" }
+    },
+    listen = true,
+    timeout = 10,
+    widget_text = battery_widget_text,
+    tooltip_text = "Battery ${state}${time_est}\nCapacity: ${capacity_percent}%",
+    alert_threshold = 5,
+    alert_timeout = 0,
+    alert_title = "Low battery !",
+    alert_text = "${AC_BAT}${time_est}"
+}
+
+
+local BAT1 = battery_widget {
+    ac = "AC",
+    adapter = "BAT1",
+    ac_prefix = "AC: ",
+    battery_prefix = "Bat (ext): ",
+    limits = {
+        { 25, "#dc2566"   },
+        { 50, "orange"},
+        {100, "#8fc029" }
+    },
+    listen = true,
+    timeout = 10,
+    widget_text = battery_widget_text,
+    tooltip_text = "Battery ${state}${time_est}\nCapacity: ${capacity_percent}%",
+    alert_threshold = 5,
+    alert_timeout = 0,
+    alert_title = "Low battery !",
+    alert_text = "${AC_BAT}${time_est}"
+}
+
+local TAG_MAIN = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_HOME", "1")
+local TAG_DEV1 = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_CODE", "2")
+local TAG_DEV2 = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_CODE", "3") .. "²"
+local TAG_MUSIC = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_MUSIC", "4")
+local TAG_SYSTEM = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_COGS", "5")
+
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "main", "dev", "job search", "music" }, s, awful.layout.layouts[1])
+    awful.tag({ TAG_MAIN, TAG_DEV1, TAG_DEV2, TAG_MUSIC, TAG_SYSTEM }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -207,8 +308,10 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Add widgets to the wibox
     s.mywibox:setup {
+        spacing = 6,
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
+            spacing = 6,
             layout = wibox.layout.fixed.horizontal,
             mylauncher,
             s.mytaglist,
@@ -217,7 +320,10 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
+            spacing = 6,
+            BAT0,
+            BAT1,
+            -- mykeyboardlayout,
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
@@ -257,7 +363,7 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
+    awful.key({ modkey,           }, "w", function () mymainmenu:toggle() end,
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
@@ -522,9 +628,13 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
+    local iconW = awful.titlebar.widget.iconwidget(c)
+    iconW.resize = true
+    iconW.forced_height = dpi(22)
+    iconW.forced_width = dpi(22)
     awful.titlebar(c) : setup {
         { -- Left
-            awful.titlebar.widget.iconwidget(c),
+            iconW,
             buttons = buttons,
             layout  = wibox.layout.fixed.horizontal
         },

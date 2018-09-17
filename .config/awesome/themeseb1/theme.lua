@@ -15,26 +15,26 @@ theme.font          = "xos4 Terminus"
 
 -- local focusColor    = "#fefefe"
 local focusColor    = "#e84f4f"
-theme.bg_normal     = "#161616"
-theme.bg_focus      = focusColor
+theme.bg_normal     = "#272822"
+theme.bg_focus      = "#55bcce"
 theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
--- theme.bg_systray    = theme.bg_normal
-theme.bg_systray    = "#161616"
+theme.bg_systray    = theme.bg_normal
+-- theme.bg_systray    = "#161616"
 
-theme.fg_normal     = "#DDDDDD"
-theme.fg_focus      = "#161616"
+theme.fg_normal     = "#dedede"
+theme.fg_focus      = "#000000"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
-theme.useless_gap   = dpi(2)
-theme.border_width  = dpi(1)
-theme.border_normal = "#161616"
-theme.border_focus  = "#666666"
+theme.useless_gap   = dpi(1)
+theme.border_width  = dpi(2)
+theme.border_normal = "#000000"
+theme.border_focus  = "#56b7a5"
 theme.border_marked = "#91231c"
 
-theme.tasklist_bg_focus = "#161616"
-theme.tasklist_fg_focus = focusColor
+theme.tasklist_bg_focus = theme.bg_normal
+theme.tasklist_fg_focus = theme.bg_focus
 -- There are other variable sets
 -- overriding the default one when
 -- defined, the sets are:
@@ -45,16 +45,32 @@ theme.tasklist_fg_focus = focusColor
 -- mouse_finder_[color|timeout|animate_timeout|radius|factor]
 -- prompt_[fg|bg|fg_cursor|bg_cursor|font]
 -- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
+theme.tooltip_border_width = dpi(1)
+theme.tooltip_opacity = 0.2
+theme.hotkeys_opacity = 10
+theme.hotkeys_bg = "#333333"
+theme.hotkeys_modifiers_fg = "#FEFEFE"
+theme.hotkeys_label_fg = "#FEFEFE"
+theme.hotkeys_fg = "#DDDDDD"
+-- theme.hotkeys_bg = "#999999"
 -- Example:
---theme.taglist_bg_focus = "#ff0000"
-
+theme.taglist_bg_empty = "#48483e"
+theme.taglist_bg_focus = "#55bcce"
+theme.taglist_fg_focus = "#000000"
+-- theme.taglist_bg_empty = "#d4c96e"
+-- theme.taglist_fg_empty = "#272822"
+theme.taglist_bg_occupied = "#9358fe"
+theme.taglist_bg_urgent = "#fa2772"
+theme.taglist_spacing = dpi(2)
+theme.tasklist_shape_border_width = dpi(4)
+theme.tasklist_shape_border_color = "#ffffff"
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
 theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
-    taglist_square_size, theme.fg_normal
+    taglist_square_size, theme.tasklist_fg_normal
 )
 theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
-    taglist_square_size, theme.fg_normal
+    taglist_square_size, theme.tasklist_fg_normal
 )
 
 -- Variables set for theming notifications:
@@ -126,6 +142,7 @@ theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
 theme.awesome_icon = theme_assets.awesome_icon(
     theme.menu_height, theme.bg_focus, theme.fg_focus
 )
+theme.menu_icon = "~/.config/awesome/themeseb1/menu_bars.svg"
 
 -- Define the icon theme for application icons. If not set then the icons
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.

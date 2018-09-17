@@ -253,3 +253,6 @@ dhcpcd eth0
 # Generate an effective list of mirrors
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 rankmirrors -n 6 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
+
+# https://github.com/gabrielelana/awesome-terminal-fonts
+
