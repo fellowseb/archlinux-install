@@ -3,20 +3,14 @@
 ## Installation
 ```
 cd $HOME
-git clone dotfiles
+git clone repolink dotfiles
 cd dotfiles
-./dotfiles init
+./install.sh
 ```
 
 ## Usage
 ```
-dotfiles help 
-dotfiles list
+dotfiles [help]
+dotfiles list-setups #thinkmachine
 dotfiles install thinkmachine
-```
-
-## Help
-```
-#Available from anywhere in $HOME
-dotfiles help
 ```
