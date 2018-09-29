@@ -225,8 +225,9 @@ systemctl enable lightdm.service
 # Install iGPU drivers
 pacman -S xf86-video-intel #xf86-video-fbdev under VM
 # Install dGPU drivers (native NVIDIA)
-curl -L -0 https://cfnvidiawebsitetogetlinux64runfile > /home/seb/Downloads/thefile.run
-sh /home/seb/Downloads/thefile.run # xserver needs to be exited
+pacman -S nvidia
+# curl -L -0 https://cfnvidiawebsitetogetlinux64runfile > /home/seb/Downloads/thefile.run
+# sh /home/seb/Downloads/thefile.run # xserver needs to be exited
 # Install bumblebee
 pacman -S bumblebee mesa bbswitch
 g passwd -a seb bumblebee

@@ -1,0 +1,28 @@
+URxvt*termName: rxvt-256color
+URxvt*geometry: 208x48
+!URxvt*loginShell: true
+URxvt*scrollTtyKeypress: true
+URxvt*scrollTtyOutput: false
+URxvt*scrollWithBuffer: false
+URxvt*skipScroll: false
+URxvt*scrollBar: false
+URxvt*fading: 30
+URxvt*visualBell: false
+!URxvt*background: *.background
+!URxvt*foreground: White
+URxvt*colorUL: yellow
+URxvt*underlineColor: yellow
+URxvt*font: xft:xos4 Terminus:pixelsize=24,xft:FontAwesome:size=15:autohint=true
+!URxvt*boldFont: xft:xos4 Terminus:style=Bold:size=22
+!URxvt*italicFont: xft:Bitstream Terminal:style=Italic:size=22 
+!URxvt*boldItalicFont: xft:Bitstream Terminal:style=Bold Italic:size=22
+URxvt*saveLines: 4095
+URxvt*print-pipe: cat > $HOME/$(echo urxvt.dump.$(date +'%Y%M%d%H%m%S'))
+URxvt*perl-ext:
+URxvt*perl-ext-common:
+URxvt*iso14755: false
+URxvt*iso14755_52: false
+URxvt*internalBorder: 10
+URxvt*externalBorder: 0
+URxvt*thickness: 0
+URxvt*url-launcher: chromium

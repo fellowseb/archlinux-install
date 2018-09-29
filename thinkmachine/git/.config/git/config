@@ -1,0 +1,7 @@
+[user]
+	email = wauquier.sebastien@gmail.com
+	name = fellowseb
+[gpg]
+	program = gpg2
+[core]
+	excludesfile = /home/seb/.config/git/ignore

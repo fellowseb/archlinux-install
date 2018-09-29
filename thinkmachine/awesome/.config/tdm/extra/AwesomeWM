@@ -1,0 +1,2 @@
+#! /bin/sh
+exec startx "${XDG_CONFIG_HOME:-$HOME/.config}"/X11/awesomewm.xinitrc

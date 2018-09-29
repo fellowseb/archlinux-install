@@ -1,0 +1,89 @@
+ " No compat mode
+set nocp
+
+" Get the defaults that most users want.
+source $VIMRUNTIME/defaults.vim
+
+" Move files to be XDG base-dire spec compliant, if possible
+if exists('$XDG_CACHE_HOME')
+  let &g:directory=$XDG_CACHE_HOME
+  set viminfo+=n$XDG_CACHE_HOME/vim/viminfo
+else
+  let &g:directory=$HOME . '/.cache'
+  set viminfo+=n$HOME/.cache/vim/viminfo
+endif
+if exists('$XDG_DATA_HOME')
+  set runtimepath=$XDG_DATA_HOME/vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$XDG_CONFIG_HOME/vim/after
+else
+  set runtimepath=$HOME/.local/share/vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.local/share/vim/after
+endif
+let &g:undodir=&g:directory . '/vim/undo//'
+let &g:backupdir=&g:directory . '/vim/backup//'
+let &g:directory.='/vim/swap//'
+
+" Create directories if they doesn't exist
+if ! isdirectory(expand(&g:directory))
+  silent! call mkdir(expand(&g:directory), 'p', 0700)
+endif
+if ! isdirectory(expand(&g:backupdir))
+  silent! call mkdir(expand(&g:backupdir), 'p', 0700)
+endif
+if ! isdirectory(expand(&g:undodir))
+  silent! call mkdir(expand(&g:undodir), 'p', 0700)
+endif
+
+if has("vms")
+  set nobackup		" do not keep a backup file, use versions instead
+else
+  set backup		" keep a backup file (restore to previous version)
+  if has('persistent_undo')
+    set undofile	" keep an undo file (undo changes after closing)
+  endif
+endif
+
+if &t_Co > 2 || has("gui_running")
+  " Switch on highlighting the last used search pattern.
+  set hlsearch
+endif
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+  au!
+  " For all text files set 'textwidth' to 78 characters.
+  autocmd FileType text setlocal textwidth=78
+  augroup END
+else
+  set autoindent		" always set autoindenting on
+endif " has("autocmd")
+
+" Add optional packages.
+"
+" The matchit plugin makes the % command work better, but it is not backwards
+" compatible.
+" The ! means the package won't be loaded right away but when plugins are
+" loaded during initialization.
+if has('syntax') && has('eval')
+  packadd! matchit
+endif
+
+" Show line numbers
+set number
+
+" Highlight searchs
+set hlsearch
+
+
+" Use 2 spaces for tabs, > moves 2 spaces
+set tabstop=2
+set shiftwidth=2
+set expandtab
+
+" Use airline powerline fonts
+let g:airline_powerline_fonts = 1
+
+" Use XDG-open default viewer to open URLs
+let g:netrw_browsex_viewer= "xdg-open"
+
+filetype plugin indent on
