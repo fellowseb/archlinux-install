@@ -1,0 +1,3 @@
+#! /bin/bash
+urxvt --help 2>&1 | sed -n '/: /s/^ */! URxvt*/gp'
+
