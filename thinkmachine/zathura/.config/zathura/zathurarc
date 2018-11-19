@@ -1,0 +1,4 @@
+set recolor true
+set recolor-darkcolor "#dedede"
+set recolor-lightcolor "#272822"
+set default-bg "#272822"
