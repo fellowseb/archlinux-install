@@ -78,10 +78,10 @@
 "amixer set Capture toggle"
    XF86AudioMicMute
 # Increase backlight
-"xbacklight -inc 1"
+"xbacklight -inc 5"
    XF86MonBrightnessUp
 # Decrease backlight
-"xbacklight -dec 1"
+"xbacklight -dec 5"
    XF86MonBrightnessDown
 ##################################
 # End of xbindkeys configuration #
