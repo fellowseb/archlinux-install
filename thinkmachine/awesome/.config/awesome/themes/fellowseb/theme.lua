@@ -13,6 +13,7 @@ theme.font          = "xos4 Terminus"
 local focusColor    = "#e84f4f"
 theme.bg_normal     = "#272822"
 theme.bg_focus      = "#55bcce"
+theme.bg_focus      = "#997009"
 theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal
@@ -23,10 +24,12 @@ theme.fg_focus      = "#000000"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
-theme.useless_gap   = dpi(1)
-theme.border_width  = dpi(2)
+theme.useless_gap   = dpi(2)
+theme.border_width  = dpi(4)
 theme.border_normal = "#000000"
+theme.border_normal = "#272822"
 theme.border_focus  = "#56b7a5"
+theme.border_focus  = "#272822"
 theme.border_marked = "#91231c"
 
 theme.tasklist_bg_focus = theme.bg_normal
@@ -88,8 +91,8 @@ theme.menu_width  = dpi(100)
 --theme.bg_widget = "#cc0000"
 
 -- Define the image to load
-theme.titlebar_close_button_normal = "~/.config/awesome/themeseb1/close.svg"
-theme.titlebar_close_button_focus  = "~/.config/awesome/themeseb1/close_focus.svg"
+theme.titlebar_close_button_normal = "~/.config/awesome/themes/fellowseb/close.svg"
+theme.titlebar_close_button_focus  = "~/.config/awesome/themes/fellowseb/close_focus.svg"
 
 theme.titlebar_minimize_button_normal = themes_path.."default/titlebar/minimize_normal.png"
 theme.titlebar_minimize_button_focus  = themes_path.."default/titlebar/minimize_focus.png"
@@ -114,7 +117,7 @@ theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar
 theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
 
-theme.wallpaper = "~/.config/awesome/themeseb1/background.jpg"
+theme.wallpaper = "~/.config/awesome/themes/fellowseb/background.jpg"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
@@ -138,7 +141,7 @@ theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
 theme.awesome_icon = theme_assets.awesome_icon(
     theme.menu_height, theme.bg_focus, theme.fg_focus
 )
-theme.menu_icon = "~/.config/awesome/themeseb1/menu_bars.svg"
+theme.menu_icon = "~/.config/awesome/themes/fellowseb/menu_bars.svg"
 
 -- Define the icon theme for application icons. If not set then the icons
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
