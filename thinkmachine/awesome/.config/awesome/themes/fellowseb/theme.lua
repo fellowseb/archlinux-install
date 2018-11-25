@@ -7,7 +7,8 @@ local themes_path = gfs.get_themes_dir()
 
 local theme = {}
 
-theme.font          = "xos4 Terminus"
+-- theme.font          = "xos4 Terminus"
+theme.font          = "Inconsolata Nerd Font 11"
 
 -- local focusColor    = "#fefefe"
 local focusColor    = "#e84f4f"

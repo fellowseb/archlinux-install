@@ -12,7 +12,8 @@ URxvt*visualBell: false
 !URxvt*foreground: White
 URxvt*colorUL: yellow
 URxvt*underlineColor: yellow
-URxvt*font: xft:xos4 Terminus:pixelsize=24,xft:FontAwesome:size=15:autohint=true
+!URxvt*font: xft:xos4 Terminus:pixelsize=24,xft:FontAwesome:size=15:autohint=true
+URxvt*font: xft:Inconsolata Nerd Font Mono:size=11
 !URxvt*boldFont: xft:xos4 Terminus:style=Bold:size=22
 !URxvt*italicFont: xft:Bitstream Terminal:style=Italic:size=22 
 !URxvt*boldItalicFont: xft:Bitstream Terminal:style=Bold Italic:size=22
