@@ -95,8 +95,20 @@ local function client_menu_toggle_fn()
     end
 end
 
+local CODEPOINT_OF_AWESOME_HOME='f015'
+local CODEPOINT_OF_AWESOME_CODE='f121'
+local CODEPOINT_OF_AWESOME_MUSIC='f001'
+local CODEPOINT_OF_AWESOME_COGS='f085'
+local CODEPOINT_OF_AWESOME_CLOCK_O='f017'
+local CODEPOINT_OF_AWESOME_CALENDAR='f073'
+local CODEPOINT_OF_AWESOME_BATTERY_EMPTY='f244'
+local CODEPOINT_OF_AWESOME_BATTERY_QUARTER='f243'
+local CODEPOINT_OF_AWESOME_BATTERY_HALF='f242'
+local CODEPOINT_OF_AWESOME_BATTERY_THREE_QUARTERS='f241'
+local CODEPOINT_OF_AWESOME_BATTERY_FULL='f240'
+
 local function awesome_terminal_cp_to_char(cpstr, def)
-    return utf8.char(tonumber(os.getenv(cpstr), 16)) or def
+    return utf8.char(tonumber(cpstr, 16)) or def
 end
 
 local function confirm_prompt_fn(prompText, fn, defaultToNo)
@@ -149,7 +161,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 
 -- {{{ Wibar
 -- Create a textclock widget
-mytextclock = wibox.widget.textclock(awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_CALENDAR", "").." %a %b %d "..awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_CLOCK_O", "").." %H:%M")
+mytextclock = wibox.widget.textclock(awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_CALENDAR, "").." %a %b %d "..awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_CLOCK_O, "").." %H:%M")
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -211,15 +223,15 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 local function battery_icon(percent_str)
     local percent = tonumber(percent_str)
-    local cp_str = "CODEPOINT_OF_AWESOME_BATTERY_FULL"
+    local cp_str = CODEPOINT_OF_AWESOME_BATTERY_FULL
     if percent < 25 then
-         cp_str = "CODEPOINT_OF_AWESOME_BATTERY_EMPTY"
+         cp_str = CODEPOINT_OF_AWESOME_BATTERY_EMPTY
     elseif percent < 50 then
-	 cp_str = "CODEPOINT_OF_AWESOME_BATTERY_QUARTER"
+	 cp_str = CODEPOINT_OF_AWESOME_BATTERY_QUARTER
     elseif percent < 75 then
-         cp_str = "CODEPOINT_OF_AWESOME_BATTERY_HALF"
+         cp_str = CODEPOINT_OF_AWESOME_BATTERY_HALF
     elseif percent < 100 then
-	 cp_str = "CODEPOINT_OF_AWESOME_BATTERY_THREE_QUARTERS"
+	 cp_str = CODEPOINT_OF_AWESOME_BATTERY_THREE_QUARTERS
     end
     return awesome_terminal_cp_to_char(cp_str, "")
 end
@@ -241,7 +253,7 @@ local BAT0 = battery_widget {
     limits = {
         { 25, "#dc2566"   },
         { 50, "orange"},
-        {100, "#8fc029" }
+        {100, "#282722" }
     },
     listen = true,
     timeout = 10,
@@ -262,7 +274,7 @@ local BAT1 = battery_widget {
     limits = {
         { 25, "#dc2566"   },
         { 50, "orange"},
-        {100, "#8fc029" }
+        {100, "#272822" }
     },
     listen = true,
     timeout = 10,
@@ -274,11 +286,11 @@ local BAT1 = battery_widget {
     alert_text = "${AC_BAT}${time_est}"
 }
 
-local TAG_MAIN = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_HOME", "1")
-local TAG_DEV1 = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_CODE", "2")
-local TAG_DEV2 = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_CODE", "3") .. "²"
-local TAG_MUSIC = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_MUSIC", "4")
-local TAG_SYSTEM = awesome_terminal_cp_to_char("CODEPOINT_OF_AWESOME_COGS", "5")
+local TAG_MAIN = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_HOME, "1")
+local TAG_DEV1 = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_CODE, "2")
+local TAG_DEV2 = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_CODE, "3") .. "²"
+local TAG_MUSIC = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_MUSIC, "4")
+local TAG_SYSTEM = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_COGS, "5")
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
@@ -308,12 +320,16 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Add widgets to the wibox
     s.mywibox:setup {
+            layout = wibox.container.margin,
+            top = 4,
+            left = 4,
+            right = 4,
+            {
         spacing = 6,
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             spacing = 6,
             layout = wibox.layout.fixed.horizontal,
-            mylauncher,
             s.mytaglist,
             s.mypromptbox,
         },
@@ -328,6 +344,7 @@ awful.screen.connect_for_each_screen(function(s)
             mytextclock,
             s.mylayoutbox,
         },
+      }
     }
 end)
 -- }}}
@@ -652,7 +669,8 @@ client.connect_signal("request::titlebars", function(c)
             awful.titlebar.widget.stickybutton   (c),
             awful.titlebar.widget.ontopbutton    (c),
             awful.titlebar.widget.closebutton    (c),
-            layout = wibox.layout.fixed.horizontal()
+            layout = wibox.layout.fixed.horizontal(),
+            spacing = dpi(4)
         },
         layout = wibox.layout.align.horizontal
     }
