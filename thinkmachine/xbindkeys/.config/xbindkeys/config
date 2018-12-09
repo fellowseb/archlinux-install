@@ -83,6 +83,12 @@
 # Decrease backlight
 "xbacklight -dec 5"
    XF86MonBrightnessDown
+# Increase backlight
+"xbacklight -inc 1"
+   Control + XF86MonBrightnessUp
+# Decrease backlight
+"xbacklight -dec 1"
+   Control + XF86MonBrightnessDown
 ##################################
 # End of xbindkeys configuration #
 ##################################
