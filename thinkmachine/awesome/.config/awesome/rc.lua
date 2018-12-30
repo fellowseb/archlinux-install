@@ -50,7 +50,7 @@ beautiful.init("/home/seb/.config/awesome/themes/fellowseb/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
-editor = os.getenv("EDITOR") or "nano"
+editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
 -- Default modkey.
@@ -141,6 +141,9 @@ mymainmenu = awful.menu({
   items = {
     { "awesome", myawesomemenu, beautiful.awesome_icon },
     { "terminal", terminal },
+    { "chromium", "chromium-browser" },
+    { "zathura", "zathura" },
+    { "libreoffice", "libreoffice" },
     { "system", {
         { "reboot", confirm_prompt_fn("Sure ?", function() awful.spawn("systemctl reboot") end) },
         { "poweroff", confirm_prompt_fn("Sure ?", function() awful.spawn("systemctl poweroff") end) }
@@ -288,7 +291,7 @@ local BAT1 = battery_widget {
 
 local TAG_MAIN = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_HOME, "1")
 local TAG_DEV1 = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_CODE, "2")
-local TAG_DEV2 = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_CODE, "3") .. "²"
+local TAG_DEV2 = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_CODE, "3") 
 local TAG_MUSIC = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_MUSIC, "4")
 local TAG_SYSTEM = awesome_terminal_cp_to_char(CODEPOINT_OF_AWESOME_COGS, "5")
 
@@ -310,30 +313,41 @@ awful.screen.connect_for_each_screen(function(s)
                            awful.button({ }, 4, function () awful.layout.inc( 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(-1) end)))
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons, { spacing = dpi(4) }, nil, wibox.layout.fixed.vertical())
 
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
 
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
+    s.leftwibox = awful.wibar({ position = "left", screen = s, width = dpi(40) })
+
+    s.leftwibox:setup {
+            left = 6,
+            top = 16,
+            layout = wibox.layout.margin,
+            s.mytaglist
+    }
 
     -- Add widgets to the wibox
     s.mywibox:setup {
-            layout = wibox.container.margin,
-            top = 4,
-            left = 4,
-            right = 4,
-            {
+        layout = wibox.container.margin,
+        top = 4,
+        left = 80,
+        right = 4,
+        {
         spacing = 6,
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             spacing = 6,
             layout = wibox.layout.fixed.horizontal,
-            s.mytaglist,
             s.mypromptbox,
         },
-        s.mytasklist, -- Middle widget
+        {
+          right = 6,
+          layout = wibox.container.margin,
+          s.mytasklist, -- Middle widget
+        },
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             spacing = 6,
@@ -650,6 +664,12 @@ client.connect_signal("request::titlebars", function(c)
     iconW.forced_height = dpi(22)
     iconW.forced_width = dpi(22)
     awful.titlebar(c) : setup {
+      layout = wibox.layout.margin,
+      left = 4,
+      right = 4,
+      top = 4,
+      bottom = 4,
+      {
         { -- Left
             iconW,
             buttons = buttons,
@@ -673,6 +693,7 @@ client.connect_signal("request::titlebars", function(c)
             spacing = dpi(4)
         },
         layout = wibox.layout.align.horizontal
+      }
     }
 end)
 

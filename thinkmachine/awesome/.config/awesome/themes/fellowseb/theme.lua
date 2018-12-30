@@ -12,27 +12,26 @@ local this_theme_path = "~/.config/awesome/themes/fellowseb/"
 theme.font          = "Inconsolata Nerd Font 11"
 
 theme.bg_normal     = "#665e49"
-theme.bg_focus      = "#55bcce"
+theme.bg_focus      = "#5bcce"
 theme.bg_focus      = "#997009"
 theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
-theme.bg_systray    = "#FF0000"
+-- theme.bg_systray    = "#FF0000"
 
-theme.fg_normal     = "#dedede"
-theme.fg_focus      = "#282722"
+theme.fg_normal     = "#282322"
+theme.fg_focus      = "#997009"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
 theme.useless_gap   = dpi(4)
-theme.border_width  = dpi(2)
-theme.border_normal = "#000000"
+theme.border_width  = dpi(0)
 theme.border_normal = "#272822"
-theme.border_focus  = "#56b7a5"
 theme.border_focus  = "#997009"
 theme.border_marked = "#91231c"
 
-theme.tasklist_bg_focus = "#665e49"
-theme.tasklist_fg_focus = "#272822"
+theme.tasklist_bg_focus = "#272822"
+theme.tasklist_fg_focus = "#997009"
+theme.tasklist_shape = shape.rounded_rect
 -- There are other variable sets
 -- overriding the default one when
 -- defined, the sets are:
@@ -43,6 +42,7 @@ theme.tasklist_fg_focus = "#272822"
 -- mouse_finder_[color|timeout|animate_timeout|radius|factor]
 -- prompt_[fg|bg|fg_cursor|bg_cursor|font]
 -- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
+theme.prompt_bg = "#997009"
 theme.tooltip_border_width = dpi(1)
 theme.tooltip_opacity = 0.9 
 theme.tooltip_bg = "#fefefe"
@@ -58,7 +58,7 @@ theme.hotkeys_border_color = "#999999"
 -- theme.hotkeys_bg = "#999999"
 -- Example:
 theme.taglist_shape = shape.rounded_rect
-theme.taglist_shape_border_width = dpi(1)
+theme.taglist_shape_border_width = dpi(0)
 theme.taglist_shape_border_color = "#272822"
 theme.taglist_bg_empty = "#665e49"
 theme.taglist_bg_focus = "#272822"
@@ -68,8 +68,7 @@ theme.taglist_fg_occupied = "#665e49"
 theme.taglist_bg_occupied = "#272822"
 theme.taglist_bg_urgent = "#fa2772"
 theme.taglist_spacing = dpi(2)
-theme.tasklist_shape_border_width = dpi(4)
-theme.tasklist_shape_border_color = "#ffffff"
+theme.taglist_font = "Inconsolata Nerd Font 19"
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
 theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
@@ -80,7 +79,8 @@ theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
 )
 
 theme.titlebar_bg_normal = "#272822"
-
+theme.titlebar_fg_normal = "#665e49"
+theme.titlebar_fg_focus = "#272822"
 -- Variables set for theming notifications:
 -- notification_font
 -- notification_[bg|fg]
@@ -90,10 +90,13 @@ theme.titlebar_bg_normal = "#272822"
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]
 -- menu_[border_color|border_width]
-theme.menu_submenu_icon = themes_path.."default/submenu.png"
+theme.menu_submenu_icon = nil
 theme.menu_height = dpi(15)
 theme.menu_width  = dpi(100)
 theme.menu_bg_normal = "#997009"
+theme.menu_bg_focus = "#272822"
+theme.menu_fg_normal = "#272822"
+theme.menu_fg_focus = "#997009"
 theme.menu_border_color = "#997009"
 theme.menu_border_width = dpi(1)
 
