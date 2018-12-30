@@ -1,0 +1,15 @@
+# Aliases
+alias gits='git status --short --branch'
+alias gita='git add'
+alias gitc='git checkout'
+alias gitb='git branch -vv'
+alias gitcb='git checkout -b'
+alias gitrb='git rebase'
+alias gitrbi='git rebase --interactive'
+alias gitrs='git reset'
+alias gitap='git add --patch'
+alias gitp='git pull'
+alias gitco='git commit'
+alias gitcoa='git commit --amend'
+alias gitl='git log --oneline'
+
