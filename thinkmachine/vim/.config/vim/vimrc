@@ -81,9 +81,11 @@ set shiftwidth=2
 set expandtab
 
 " Use airline powerline fonts
-let g:airline_powerline_fonts = 1
+" let g:airline_powerline_fonts = 1
 
 " Use XDG-open default viewer to open URLs
 let g:netrw_browsex_viewer= "xdg-open"
+
+set background=dark
 
 filetype plugin indent on
