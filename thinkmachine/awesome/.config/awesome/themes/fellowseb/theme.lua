@@ -23,7 +23,7 @@ theme.fg_focus      = "#997009"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
-theme.useless_gap   = dpi(4)
+theme.useless_gap   = dpi(3)
 theme.border_width  = dpi(0)
 theme.border_normal = "#272822"
 theme.border_focus  = "#997009"
@@ -132,7 +132,7 @@ theme.titlebar_maximized_button_focus_inactive = this_theme_path.."maximized_foc
 theme.titlebar_maximized_button_normal_active  = this_theme_path.."maximized_active.svg"
 theme.titlebar_maximized_button_focus_active  = this_theme_path.."maximized_focus_active.svg"
 
-wallpaper.centered("/home/seb/.config/awesome/themes/fellowseb/archlinux_logo.svg", nil, "#665e49", 2)
+wallpaper.centered("/home/seb/.config/awesome/themes/fellowseb/wallpaper_mars.png", nil, "#665e49", 2)
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
