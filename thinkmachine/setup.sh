@@ -125,7 +125,7 @@ nano /etc/locale.gen
 locale-gen
 echo LANG=en_GB.UTF-8 >> /etc/locale.conf
 echo KEYMAP=fr-latin1 >> /etc/vconsole.conf
-echo FONT=term-132n >> /etc/vconsole.conf
+echo FONT=ter-132n >> /etc/vconsole.conf
 
 passwd
 useradd -m -G wheel -s /bin/bash seb
@@ -212,22 +212,12 @@ pacman -S xorg xterm xorg-xrandr
 localectl --no-convert set-x11-keymap fr
 
 # Install WM
-su seb
 yay -S awesome
-cp /etc/xdg/awesome/ ~/.config/awesome/
-echo "exec awesome" >> ~/.xinitrc
-exit
-
-# Install DM
-pacman -S lightdm lightdm-gtk-greeter
-systemctl enable lightdm.service
 
 # Install iGPU drivers
 pacman -S xf86-video-intel #xf86-video-fbdev under VM
 # Install dGPU drivers (native NVIDIA)
 pacman -S nvidia
-# curl -L -0 https://cfnvidiawebsitetogetlinux64runfile > /home/seb/Downloads/thefile.run
-# sh /home/seb/Downloads/thefile.run # xserver needs to be exited
 # Install bumblebee
 pacman -S bumblebee mesa bbswitch
 g passwd -a seb bumblebee
@@ -254,6 +244,3 @@ dhcpcd eth0
 # Generate an effective list of mirrors
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 rankmirrors -n 6 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
-
-# https://github.com/gabrielelana/awesome-terminal-fonts
-
