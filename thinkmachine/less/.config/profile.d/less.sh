@@ -1,5 +1,6 @@
 # XDG dir spec compliance
 export LESSHISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}"/less/history
+( mkdir -p $(dirname $LESSHISTFILE) | true ) 2>/dev/null
 export LESSKEY="${XDG_CONFIG_HOME:-$HOME/.config}"/less/conf
 
 # Formatting / coloring
