@@ -1,7 +1,10 @@
 [user]
 	email = wauquier.sebastien@gmail.com
 	name = fellowseb
+	signingKey = 9BFC3195575023B4
 [gpg]
 	program = gpg2
 [core]
 	excludesfile = /home/seb/.config/git/ignore
+[commit]
+	gpgSign = true
