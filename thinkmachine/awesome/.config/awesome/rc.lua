@@ -227,14 +227,14 @@ screen.connect_signal("property::geometry", set_wallpaper)
 local function battery_icon(percent_str)
     local percent = tonumber(percent_str)
     local cp_str = CODEPOINT_OF_AWESOME_BATTERY_FULL
-    if percent < 25 then
+    if percent == nil or  percent < 100 then
+         cp_str = CODEPOINT_OF_AWESOME_BATTERY_THREE_QUARTERS
+     elseif percent < 25 then
          cp_str = CODEPOINT_OF_AWESOME_BATTERY_EMPTY
     elseif percent < 50 then
-	 cp_str = CODEPOINT_OF_AWESOME_BATTERY_QUARTER
+         cp_str = CODEPOINT_OF_AWESOME_BATTERY_QUARTER
     elseif percent < 75 then
          cp_str = CODEPOINT_OF_AWESOME_BATTERY_HALF
-    elseif percent < 100 then
-	 cp_str = CODEPOINT_OF_AWESOME_BATTERY_THREE_QUARTERS
     end
     return awesome_terminal_cp_to_char(cp_str, "")
 end
@@ -469,7 +469,10 @@ globalkeys = gears.table.join(
               {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
+              {description = "show the menubar", group = "launcher"}),
+    -- Other
+    awful.key({ "Control", "Mod1" }, "l", function() awful.spawn("i3lock -c 665e49 -i /home/seb/.config/awesome/themes/fellowseb/wallpaper_mars.png") end,
+              {description = "lock the screen", group = "screen"})
 )
 
 clientkeys = gears.table.join(
